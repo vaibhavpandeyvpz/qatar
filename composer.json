@@ -1,0 +1,50 @@
+{
+  "authors": [
+    {
+      "name": "Vaibhav Pandey",
+      "email": "contact@vaibhavpandey.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Qatar\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Qatar\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "description": "Framework agnostic PHP library for publishing and consuming jobs using Redis and ElasticMQ backends.",
+  "homepage": "https://github.com/vaibhavpandeyvpz/qatar",
+  "keywords": [
+    "queue",
+    "job",
+    "worker",
+    "redis",
+    "elasticmq",
+    "sqs",
+    "background",
+    "async"
+  ],
+  "license": "MIT",
+  "name": "vaibhavpandeyvpz/qatar",
+  "require": {
+    "php": "^8.2"
+  },
+  "require-dev": {
+    "aws/aws-sdk-php": "^3.0",
+    "phpunit/phpunit": "^10.0",
+    "predis/predis": "^2.0"
+  },
+  "suggest": {
+    "ext-redis": "Required to use RedisQueue with native driver",
+    "predis/predis": "Required to use RedisQueue with Predis driver (^2.0)",
+    "aws/aws-sdk-php": "Required to use ElasticMQQueue (^3.0)",
+    "ext-json": "Required for job payload serialization"
+  },
+  "type": "library"
+}

@@ -1,0 +1,54 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        redis-extension: [true, false]
+      fail-fast: false
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      elasticmq:
+        image: softwaremill/elasticmq:latest
+        ports:
+          - 9324:9324
+          - 9325:9325
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: json, mbstring, curl${{ matrix.redis-extension && ', redis' || '' }}
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Remove Predis (if testing ext-redis)
+        if: matrix.redis-extension == true
+        run: composer remove --dev predis/predis --no-progress
+
+      - name: Run tests
+        env:
+          XDEBUG_MODE: coverage
+        run: vendor/bin/phpunit --coverage-text --colors=never

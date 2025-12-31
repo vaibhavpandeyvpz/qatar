@@ -21,7 +21,7 @@ namespace Qatar;
  *
  * @author Vaibhav Pandey <contact@vaibhavpandey.com>
  */
-final class RedisQueue implements Queue
+class RedisQueue implements Queue
 {
     /**
      * Default visibility timeout in seconds.

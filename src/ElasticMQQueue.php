@@ -20,7 +20,7 @@ use Aws\Sqs\SqsClient;
  *
  * @author Vaibhav Pandey <contact@vaibhavpandey.com>
  */
-final class ElasticMQQueue implements Queue
+class ElasticMQQueue implements Queue
 {
     /**
      * SQS client instance.

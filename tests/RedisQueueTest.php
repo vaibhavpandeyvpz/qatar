@@ -363,8 +363,6 @@ class RedisQueueTest extends TestCase
             }
         };
 
-        // We can't easily mock the connect call on \Redis without more effort,
-        // but we can verify the client was created.
         $this->assertInstanceOf(\Redis::class, $queue->getClient());
     }
 }

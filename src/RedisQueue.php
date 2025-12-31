@@ -32,7 +32,7 @@ class RedisQueue implements Queue
     /**
      * Redis client instance (Redis or Predis\Client).
      */
-    private readonly mixed $redis;
+    protected readonly mixed $redis;
 
     /**
      * Create a new Redis queue instance.

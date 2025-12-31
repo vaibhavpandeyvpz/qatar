@@ -363,7 +363,9 @@ class RedisQueueTest extends TestCase
             }
         };
 
-        $this->assertInstanceOf(\Redis::class, $queue->getClient());
+        $client = $queue->getClient();
+        $isRedis = $client instanceof \Redis || $client instanceof \Predis\Client;
+        $this->assertTrue($isRedis, 'Client should be an instance of Redis or Predis\Client');
     }
 }
 

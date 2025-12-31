@@ -18,8 +18,7 @@ class WorkerTest extends TestCase
 
     protected function setUp(): void
     {
-        $redis = new \Predis\Client('tcp://127.0.0.1:6379');
-        $this->queue = new RedisQueue($redis, 'worker_test_'.uniqid());
+        $this->queue = new RedisQueue('tcp://127.0.0.1:6379', 'worker_test_'.uniqid());
         $this->queue->purge();
     }
 

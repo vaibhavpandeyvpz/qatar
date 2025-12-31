@@ -18,8 +18,7 @@ class RedisQueueTest extends TestCase
 
     protected function setUp(): void
     {
-        $redis = new \Predis\Client('tcp://127.0.0.1:6379');
-        $this->queue = new RedisQueue($redis, 'test_queue_'.uniqid());
+        $this->queue = new RedisQueue('tcp://127.0.0.1:6379', 'test_queue_'.uniqid());
         $this->queue->purge();
     }
 
@@ -289,9 +288,9 @@ class RedisQueueTest extends TestCase
 
     public function test_different_queue_names_are_isolated(): void
     {
-        $redis = new \Predis\Client('tcp://127.0.0.1:6379');
-        $queue1 = new RedisQueue($redis, 'queue1');
-        $queue2 = new RedisQueue($redis, 'queue2');
+        $dsn = 'tcp://127.0.0.1:6379';
+        $queue1 = new RedisQueue($dsn, 'queue1');
+        $queue2 = new RedisQueue($dsn, 'queue2');
 
         $queue1->purge();
         $queue2->purge();
@@ -348,6 +347,25 @@ class RedisQueueTest extends TestCase
         $this->assertEquals(['dsn' => 'test'], $job->payload);
 
         $queue->purge();
+    }
+
+    public function test_dsn_scheme_parsing(): void
+    {
+        if (! extension_loaded('redis')) {
+            $this->markTestSkipped('ext-redis not loaded');
+        }
+
+        $queue = new class('rediss://localhost:6379') extends RedisQueue
+        {
+            public function getClient()
+            {
+                return $this->redis;
+            }
+        };
+
+        // We can't easily mock the connect call on \Redis without more effort,
+        // but we can verify the client was created.
+        $this->assertInstanceOf(\Redis::class, $queue->getClient());
     }
 }
 

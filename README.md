@@ -205,6 +205,16 @@ class BackoffJob extends Job
 }
 ```
 
+### Redis SSL/TLS Support
+
+The `RedisQueue` supports secure connections over SSL/TLS. You can use the `rediss://` or `tls://` schemes in your connection string:
+
+```php
+$queue = new RedisQueue('rediss://your-secure-redis-host:6379');
+```
+
+When using `ext-redis`, the library automatically handles the `tls://` prefix requirement for secure connections.
+
 ### Signal Handling
 
 Workers gracefully stop when they receive `SIGTERM` or `SIGINT`. They finish the current job before exiting.

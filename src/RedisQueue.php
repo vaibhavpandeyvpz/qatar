@@ -62,15 +62,15 @@ final class RedisQueue implements Queue
      */
     private function createClient(string $connection): mixed
     {
-        if (extension_loaded('redis')) {
-            return $this->createPhpRedisClient($connection);
-        }
-
         if (class_exists(\Predis\Client::class)) {
             return new \Predis\Client($connection);
         }
 
-        throw new \RuntimeException('No Redis driver found. Please install ext-redis or predis/predis.');
+        if (extension_loaded('redis')) {
+            return $this->createPhpRedisClient($connection);
+        }
+
+        throw new \RuntimeException('No Redis driver found. Please install predis/predis or ext-redis.');
     }
 
     /**
@@ -82,10 +82,15 @@ final class RedisQueue implements Queue
     private function createPhpRedisClient(string $connection): \Redis
     {
         $parsed = parse_url($connection);
+        $scheme = $parsed['scheme'] ?? 'tcp';
         $host = $parsed['host'] ?? '127.0.0.1';
         $port = (int) ($parsed['port'] ?? 6379);
         $pass = $parsed['pass'] ?? null;
         $db = (int) (ltrim($parsed['path'] ?? '', '/') ?: 0);
+
+        if (in_array($scheme, ['rediss', 'tls'])) {
+            $host = "tls://{$host}";
+        }
 
         $redis = new \Redis;
         $redis->connect($host, $port);

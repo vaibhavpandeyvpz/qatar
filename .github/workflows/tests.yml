@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        php-version: ["8.2", "8.3", "8.4"]
         redis-extension: [true, false]
       fail-fast: false
 
@@ -37,7 +38,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2"
+          php-version: ${{ matrix.php-version }}
           extensions: json, mbstring, curl${{ matrix.redis-extension && ', redis' || '' }}
           coverage: xdebug
 

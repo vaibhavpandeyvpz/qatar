@@ -50,7 +50,7 @@ docker-compose up -d
 docker-compose ps
 
 # Run tests
-composer test
+./vendor/bin/phpunit
 ```
 
 This will start:
@@ -229,7 +229,7 @@ Workers gracefully stop when they receive `SIGTERM` or `SIGINT`. They finish the
 Run tests with code coverage:
 
 ```bash
-composer test
+./vendor/bin/phpunit
 ```
 
 ## License
